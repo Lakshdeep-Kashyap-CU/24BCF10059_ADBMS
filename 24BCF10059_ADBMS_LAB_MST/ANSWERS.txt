@@ -1,0 +1,12 @@
+SELECT D.dept_name , E1.emp_name , E1.salary
+FROM employee AS E1
+JOIN 
+department AS D
+ON E1.dept_id = D.dept_id
+WHERE E1.salary > (
+	SELECT AVG(E2.salary)
+	FROM employee AS E2
+	WHERE E2.dept_id = E1.dept_id
+	GROUP BY E2.dept_id
+	HAVING COUNT(E2.emp_id)>=3
+)
