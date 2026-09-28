@@ -43,7 +43,7 @@ WHERE E1.salary > (
 	WHERE E2.dept_id = E1.dept_id
 	GROUP BY E2.dept_id
 	HAVING COUNT(E2.emp_id)>=3
-)
+);
 
 -- CREATE TABLE bank_customer (
 --     customer_id INT PRIMARY KEY,
@@ -66,6 +66,7 @@ WHERE E1.salary > (
 
 
 
+
 CREATE OR REPLACE FUNCTION customer_audit_trigger()
 RETURNS TRIGGER
 AS $$
@@ -78,17 +79,17 @@ BEGIN
 
     ELSIF TG_OP = 'DELETE' THEN
         INSERT INTO customer_audit (customer_id, customer_name, action, action_time)
-		VALUES (OLD.customer_id, OLD.customer_name, 'REMOVED', CURRENT_TIMESTAMP)
+		VALUES (OLD.customer_id, OLD.customer_name, 'REMOVED', CURRENT_TIMESTAMP);
 
 		RETURN OLD;
     END IF;
 
     RETURN NULL;
 END;
-$$ Language plpgsql
+$$ language plpgsql;
 
 
-CREATE TRIGGER customer_audit_trigger
+CREATE OR REPLACE TRIGGER customer_audit_trigger
 AFTER INSERT OR DELETE
 ON bank_customer
 FOR EACH ROW
